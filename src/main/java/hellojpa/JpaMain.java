@@ -16,19 +16,27 @@ public class JpaMain {
 
         tx.begin();
         try{
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .getResultList();
+            //not persist
+            Member member = new Member();
+            member.setId(101L);
+            member.setName("HelloJPA");
 
-            for (Member member : result) {
-                System.out.println("member.name = " + member.getName());
-            }
+            //persist (not database save)
+            System.out.println("===== BEFORE =====");
+            em.persist(member);
+            System.out.println("===== AFTER =====");
+
+            Member findMember = em.find(Member.class, 101L);
+            System.out.println("findMember.id = " + findMember.getId());
+            System.out.println("findMember.name = " + findMember.getName());
 
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
         } finally {
             em.close();
-            emf.close();
+
         }
+        emf.close();
     }
 }
